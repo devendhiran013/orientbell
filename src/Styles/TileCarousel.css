@@ -1,0 +1,100 @@
+.marquee-section {
+  margin-block: 3rem;
+  padding: 0 5rem; /* Adds padding to left and right side */
+  overflow: hidden;
+  position: relative;
+}
+
+.carousel-wrapper-with-arrows {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.manual-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.manual-arrow:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+.manual-arrow.left {
+  left: 15px;
+}
+
+.manual-arrow.right {
+  right: 15px;
+}
+
+.marquee {
+  --gap: 1rem;
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: var(--gap);
+}
+
+.marquee::-webkit-scrollbar {
+  display: none;
+}
+
+.marquee__content {
+  display: flex;
+  gap: var(--gap);
+  animation: scroll-left 40s linear infinite;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.carousel-item {
+  flex: 0 0 auto;
+  width: 180px;
+}
+
+.tile-card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: white;
+}
+
+.tile-image-container {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.tile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.tile-name {
+  text-align: center;
+  font-size: 14px;
+  padding: 10px;
+  font-weight: 500;
+}
