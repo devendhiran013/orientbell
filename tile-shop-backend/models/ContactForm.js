@@ -13,7 +13,7 @@ const contactFormSchema = new mongoose.Schema({
   submittedAt: {
     type: Date,
     default: Date.now
-  }
-}{ timestamps: true });
+  }},{ timestamps: true }
+);
 
 module.exports = mongoose.model('ContactForm', contactFormSchema);
