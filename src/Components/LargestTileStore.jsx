@@ -25,7 +25,7 @@ const LargestTileStore = () => {
         <div className="tile-store-content fadeInUp">
           <h2>The Largest Tile Store</h2>
           <p>
-            Lakshmi Ceraamics opened its doors in 1997 as a modest 400 sq. ft tile store,
+            Orientbell Tiles opened its doors in 1997 as a modest 400 sq. ft tile store,
             driven by the vision to revolutionise quality standards in every building,
             renovation and design project.
           </p>
