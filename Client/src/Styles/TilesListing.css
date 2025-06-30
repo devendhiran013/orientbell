@@ -310,3 +310,50 @@
         grid-template-columns: 1fr;
     }
 }
+/* Quantity Controls Styles */
+.qty-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f8f8;
+    border-radius: 30px;
+    padding: 5px;
+    width: 100%;
+    margin-top: 15px;
+    border: 1px solid #e0e0e0;
+}
+
+.qty-controls button {
+    background: #ffffff;
+    color: #e67e22;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+}
+
+.qty-controls button:hover {
+    background: #e67e22;
+    color: white;
+    transform: scale(1.05);
+}
+
+
+
+/* Animation for quantity changes */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.qty-updated {
+    animation: pulse 0.3s ease;
+}

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { FaFilter, FaSearch, FaShoppingCart, FaPlus, FaMinus } from 'react-icons/fa';
-import '../Styles/TilesListing.css';
 import { useCart } from '../context/CartContext';
+import '../Styles/TilesListing.css';
 
 const TilesListingPage = () => {
     const { addToCart, incrementQuantity, decrementQuantity, cart } = useCart();
+    const [quantityChanged, setQuantityChanged] = useState(null);
 
     const allTiles = [
         {
@@ -142,8 +143,6 @@ const TilesListingPage = () => {
         }
     ];
 
-
-
     const [filters, setFilters] = useState({
         category: '',
         finish: '',
@@ -205,6 +204,18 @@ const TilesListingPage = () => {
     const getQuantity = (tileId) => {
         const tile = cart.find(item => item.id === tileId);
         return tile ? tile.quantity : 0;
+    };
+
+    const handleIncrement = (tileId) => {
+        incrementQuantity(tileId);
+        setQuantityChanged(tileId);
+        setTimeout(() => setQuantityChanged(null), 300);
+    };
+
+    const handleDecrement = (tileId) => {
+        decrementQuantity(tileId);
+        setQuantityChanged(tileId);
+        setTimeout(() => setQuantityChanged(null), 300);
     };
 
     return (
@@ -275,12 +286,28 @@ const TilesListingPage = () => {
                                     <div className="tile-actions">
                                         {getQuantity(tile.id) > 0 ? (
                                             <div className="qty-controls">
-                                                <button onClick={() => decrementQuantity(tile.id)}><FaMinus /></button>
-                                                <span>{getQuantity(tile.id)}</span>
-                                                <button onClick={() => incrementQuantity(tile.id)}><FaPlus /></button>
+                                                <button
+                                                    onClick={() => handleDecrement(tile.id)}
+                                                    disabled={getQuantity(tile.id) <= 1}
+                                                    aria-label="Decrease quantity"
+                                                >
+                                                    <FaMinus />
+                                                </button>
+                                                <span className={quantityChanged === tile.id ? 'qty-updated' : ''}>
+                                                    {getQuantity(tile.id)}
+                                                </span>
+                                                <button
+                                                    onClick={() => handleIncrement(tile.id)}
+                                                    aria-label="Increase quantity"
+                                                >
+                                                    <FaPlus />
+                                                </button>
                                             </div>
                                         ) : (
-                                            <button className="add-to-cart" onClick={() => addToCart(tile)}>
+                                            <button
+                                                className="add-to-cart"
+                                                onClick={() => addToCart(tile)}
+                                            >
                                                 <FaShoppingCart /> Add to Cart
                                             </button>
                                         )}
