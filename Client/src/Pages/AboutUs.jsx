@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../Components/Header';
 import TileCarousel from '../Components/TileCarousel';
+import Faqs from '../Components/Faqs';
 import Footer from '../Components/Footer';
 import { FaAward, FaShieldAlt, FaLeaf, FaUsers, FaBuilding } from 'react-icons/fa';
 import { GiModernCity } from 'react-icons/gi';
@@ -12,7 +13,7 @@ const AboutUs = () => {
       {/* Hero Section */}
       <Header />
       <TileCarousel />
-      
+
 
       {/* Company Overview */}
       <div className="section overview">
@@ -113,6 +114,7 @@ const AboutUs = () => {
           </div>
         </div>
       </div>
+      <Faqs />
       <Footer />
     </div>
   );

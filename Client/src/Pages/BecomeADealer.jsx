@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaBuilding, FaUser, FaPhone, FaEnvelope, FaMapMarkerAlt, FaChevronDown } from 'react-icons/fa';
 import Header from '../Components/Header';
+import Faqs from '../Components/Faqs';
 import Footer from '../Components/Footer';
 import '../Styles/BecomeADealer.css';
 import Select from "react-select";
@@ -422,6 +423,7 @@ const BecomeADealer = () => {
                     </form>
                 </div>
             </div>
+            <Faqs />
             <Footer />
         </div>
     );
