@@ -1,105 +1,77 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import '../Styles/Login.css';
+import loginImage from '../assests/draw2.webp';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-// import '../Styles/Login.css';
-import { setLogin } from '../redux/state';
-import draw from "../assests/draw2.webp";
+
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    setIsButtonDisabled(true);
-    try {
-      const response = await fetch('http://localhost:5000/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
 
-      const loggedIn = await response.json();
-      if (response.ok) {
-        dispatch(
-          setLogin({
-            user: loggedIn.user,
-            token: loggedIn.token,
-          })
-        );
-        navigate('/');
-      } else {
-        setError(loggedIn.message || 'Login Failed');
-        setIsButtonDisabled(false);
-      }
-    } catch (err) {
-      console.log('Login Failed', err.message);
-      setError('Login Failed');
-      setIsButtonDisabled(false);
+    if (email === 'admin@gmail.com' && password === 'admin') {
+      localStorage.setItem('admin', 'true');
+      navigate('/admin');
+    } else {
+      setError('Invalid email or password');
     }
   };
 
   return (
-    <div className="container-fluid p-3 my-5 h-custom">
-      <div className="row">
-        <div className="col-md-6 d-flex justify-content-center align-items-center">
-          <img
-            src={draw}
-            className="img-fluid"
-            alt="Sample"
-          />
-        </div>
+    <section className="vh-100">
+      <div className="container-fluid h-custom">
+        <div className="row d-flex justify-content-center align-items-center h-100">
+          {/* Left Side - Image */}
+          <div className="col-md-9 col-lg-6 col-xl-5">
+            <img src={loginImage} className="img-fluid" alt="Login" />
+          </div>
 
-        <div className="col-md-6 d-flex justify-content-center align-items-center">
-          <div className="w-75"> {/* Restrict width of form */}
-            <form onSubmit={handleSubmit}>
+          {/* Right Side - Form */}
+          <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+            <form onSubmit={handleLogin}>
               <div className="mb-4">
-                <label htmlFor="email" className="form-label">Email address</label>
+                <label className="form-label" htmlFor="email">Email address</label>
                 <input
                   type="email"
                   id="email"
                   className="form-control form-control-lg"
+                  placeholder="Enter a valid email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
+
               <div className="mb-4">
-                <label htmlFor="password" className="form-label">Password</label>
+                <label className="form-label" htmlFor="password">Password</label>
                 <input
                   type="password"
                   id="password"
                   className="form-control form-control-lg"
+                  placeholder="Enter password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </div>
 
-              <div className="d-flex justify-content-between mb-4">
+              {error && <p className="error-message">{error}</p>}
 
-
-              </div>
-
-              {error && <p style={{ color: 'red' }}>{error}</p>}
-              <div className="text-center text-md-start mt-4 pt-2">
-                <button type="submit" className="btn btn-primary btn-lg px-5" disabled={isButtonDisabled}>
-                  LOG IN
-                </button>
-                <p className="small fw-bold mt-2 pt-1 mb-2">
-                  Don't have an account? <a href="/register" className="link-danger">Register</a>
+              <div className="text-center text-lg-start mt-4 pt-2">
+                <button type="submit" className="btn btn-primary btn-lg">Login</button>
+                <p className="small fw-bold mt-2 pt-1 mb-0">
+                  Don’t have an account? <Link to="/register" className="link-danger">Register</Link>
                 </p>
               </div>
             </form>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

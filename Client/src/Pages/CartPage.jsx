@@ -1,27 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../Components/Header';
 import Footer from '../Components/Footer';
 import { useCart } from '../context/CartContext';
 import '../Styles/CartPage.css';
 import { FaTrash } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const CartPage = () => {
   const { cart, removeFromCart } = useCart();
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const navigate = useNavigate();
 
   const getTotal = () => {
     return cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   };
 
   const handleCheckout = async () => {
+    const isLoggedIn = localStorage.getItem("user");
+
+    if (!isLoggedIn) {
+      setShowLoginPopup(true);
+      return;
+    }
+
     try {
       const amount = getTotal();
 
       const { data: order } = await axios.post("http://localhost:5000/api/payment/create-order", { amount });
 
       const options = {
-        key: "rzp_test_LOAQY31kmtl6RR", // Replace with your Razorpay key
+        key: "rzp_live_3bwnjafP09eVt8",
         amount: order.amount,
         currency: order.currency,
         name: "Tile Store",
@@ -47,6 +56,10 @@ const CartPage = () => {
       console.error("Payment error:", error);
       alert("Something went wrong during payment.");
     }
+  };
+
+  const handleLoginRedirect = () => {
+    navigate("/login");
   };
 
   return (
@@ -107,6 +120,17 @@ const CartPage = () => {
             <button className="checkout-btn" onClick={handleCheckout}>Proceed to Checkout</button>
           </div>
         </div>
+
+        {/* POPUP: Show if not logged in */}
+        {showLoginPopup && (
+          <div className="popup-overlay">
+            <div className="popup">
+              <p>Please login to proceed with checkout.</p>
+              <button onClick={handleLoginRedirect} className="btn btn-primary login-btn">Go to Login</button>
+              <button onClick={() => setShowLoginPopup(false)} className="btn btn-secondary">Cancel</button>
+            </div>
+          </div>
+        )}
       </main>
       <Footer />
     </>
