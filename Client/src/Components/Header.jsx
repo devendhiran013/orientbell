@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useSelector, useDispatch } from "react-redux";
 import { setLogout } from "../redux/state";
+import { persistor } from "../redux/store"; // ✅ Import persistor
 import { useState } from "react";
 
 const Header = () => {
@@ -15,8 +16,9 @@ const Header = () => {
   const [showLogout, setShowLogout] = useState(false);
 
   const handleLogout = () => {
-    dispatch(setLogout());
-    navigate("/login");
+    dispatch(setLogout());       // Clear user from redux
+    localStorage.clear();          // ✅ Clear localStorage persist data
+    navigate("/login");          // Redirect
   };
 
   return (
@@ -68,22 +70,27 @@ const Header = () => {
             </Link>
           </div>
 
-          <div className="user-icon" onClick={() => setShowLogout(!showLogout)} style={{ cursor: "pointer", position: "relative" }}>
+          <div
+            className="user-icon"
+            onClick={() => setShowLogout(!showLogout)}
+            style={{ cursor: "pointer", position: "relative" }}
+          >
             <span className="user-symbol">👤</span>
-            
 
             {showLogout && (
-              <div className="logout-dropdown" style={{
-                position: "absolute",
-                top: "35px",
-                right: "0",
-                backgroundColor: "white",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                padding: "5px 10px",
-                cursor: "pointer",
-                zIndex: 1000
-              }}
+              <div
+                className="logout-dropdown"
+                style={{
+                  position: "absolute",
+                  top: "35px",
+                  right: "0",
+                  backgroundColor: "white",
+                  border: "1px solid #ccc",
+                  borderRadius: "5px",
+                  padding: "5px 10px",
+                  cursor: "pointer",
+                  zIndex: 1000,
+                }}
                 onClick={handleLogout}
               >
                 Logout
@@ -108,7 +115,6 @@ const Header = () => {
           <li className="nav-item">
             <Link to="/designideas">Design Ideas</Link>
           </li>
-          
           <li className="nav-item">
             <Link to="/contactus">Contact Us</Link>
           </li>

@@ -19,6 +19,10 @@ export const CartProvider = ({ children }) => {
     });
   };
 
+  const removeFromCart = (tileId) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== tileId));
+  };
+
   const incrementQuantity = (tileId) => {
     setCart((prev) =>
       prev.map((item) =>
@@ -52,9 +56,10 @@ export const CartProvider = ({ children }) => {
       value={{
         cart,
         addToCart,
+        removeFromCart, // ✅ Add this here
         incrementQuantity,
         decrementQuantity,
-        updateQuantity, // ✅ Make sure it's included here
+        updateQuantity,
       }}
     >
       {children}

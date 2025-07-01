@@ -3,7 +3,7 @@ import '../Styles/Login.css';
 import loginImage from '../assests/draw2.webp';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setLogin } from '../redux/state'; // Make sure this path is correct
+import { setLogin } from '../redux/state';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -27,7 +27,13 @@ const LoginPage = () => {
       const loggedIn = await response.json();
 
       if (response.ok) {
-        dispatch(setLogin({ user: loggedIn.user, token: loggedIn.token }));
+        const user = loggedIn.user;
+        const token = loggedIn.token;
+
+        // ✅ Save to Redux (persisted)
+        dispatch(setLogin({ user, token }));
+
+        // ✅ Navigate
         navigate('/');
       } else {
         setError(loggedIn.message || 'Login Failed');
@@ -44,12 +50,10 @@ const LoginPage = () => {
     <section className="vh-100">
       <div className="container-fluid h-custom">
         <div className="row d-flex justify-content-center align-items-center h-100">
-          {/* Left Side - Image */}
           <div className="col-md-9 col-lg-6 col-xl-5">
             <img src={loginImage} className="img-fluid" alt="Login" />
           </div>
 
-          {/* Right Side - Form */}
           <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
             <form onSubmit={handleLogin}>
               <div className="mb-4">
@@ -78,7 +82,7 @@ const LoginPage = () => {
                 />
               </div>
 
-              {error && <p className="error-message">{error}</p>}
+              {error && <p className="error-message text-danger">{error}</p>}
 
               <div className="text-center text-lg-start mt-4 pt-2">
                 <button type="submit" className="btn btn-primary btn-lg" disabled={isButtonDisabled}>

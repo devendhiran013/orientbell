@@ -6,59 +6,63 @@ import '../Styles/CartPage.css';
 import { FaTrash } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useSelector } from 'react-redux'; // ✅ Import useSelector
 
 const CartPage = () => {
   const { cart, removeFromCart } = useCart();
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const navigate = useNavigate();
 
+  // const user = useSelector((state) => state.user); // ✅ Hook must be at top level
+
   const getTotal = () => {
     return cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   };
 
-  const handleCheckout = async () => {
-    const isLoggedIn = localStorage.getItem("user");
+ const { user, token } = useSelector((state) => state);
 
-    if (!isLoggedIn) {
-      setShowLoginPopup(true);
-      return;
-    }
+const handleCheckout = async () => {
+  if (!user || !token || token === "null" || token.trim() === "") {
+    setShowLoginPopup(true);
+    return;
+  }
 
-    try {
-      const amount = getTotal();
+  try {
+    const amount = getTotal();
 
-      const { data: order } = await axios.post("http://localhost:5000/api/payment/create-order", { amount });
+    const { data: order } = await axios.post("http://localhost:5000/api/payment/create-order", { amount });
 
-      const options = {
-        key: "rzp_live_3bwnjafP09eVt8",
-        amount: order.amount,
-        currency: order.currency,
-        name: "Tile Store",
-        description: "Order Payment",
-        order_id: order.id,
-        handler: function (response) {
-          alert("Payment successful!");
-          console.log("Razorpay response:", response);
-        },
-        prefill: {
-          name: "Customer Name",
-          email: "customer@example.com",
-          contact: "9999999999",
-        },
-        theme: {
-          color: "#3399cc",
-        },
-      };
+    const options = {
+      key: "rzp_live_3bwnjafP09eVt8",
+      amount: order.amount,
+      currency: order.currency,
+      name: "Tile Store",
+      description: "Order Payment",
+      order_id: order.id,
+      handler: function (response) {
+        alert("Payment successful!");
+      },
+      prefill: {
+        name: user.firstName || "Customer",
+        email: user.email || "customer@example.com",
+        contact: user.phone || "9999999999",
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
 
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (error) {
-      console.error("Payment error:", error);
-      alert("Something went wrong during payment.");
-    }
-  };
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  } catch (error) {
+    console.error("Payment error:", error);
+    alert("Something went wrong during payment.");
+  }
+};
+
 
   const handleLoginRedirect = () => {
+    setShowLoginPopup(false);
     navigate("/login");
   };
 
@@ -100,7 +104,7 @@ const CartPage = () => {
             </table>
 
             <div className="cart-buttons">
-              <Link to="/alltiles" className="btn-outline">Continue Shopping</Link>
+              <Link to="/products" className="btn-outline">Continue Shopping</Link>
             </div>
           </div>
 
@@ -121,7 +125,6 @@ const CartPage = () => {
           </div>
         </div>
 
-        {/* POPUP: Show if not logged in */}
         {showLoginPopup && (
           <div className="popup-overlay">
             <div className="popup">
