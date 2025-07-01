@@ -16,12 +16,12 @@ Server/dist/
 Client/.cache/
 Server/.cache/
 
-# Environment files
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# # Environment files
+# .env
+# .env.local
+# .env.development.local
+# .env.test.local
+# .env.production.local
 
 # Logs
 npm-debug.log*

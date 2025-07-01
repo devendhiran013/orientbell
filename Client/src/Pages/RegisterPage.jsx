@@ -30,7 +30,7 @@ const RegisterPage = () => {
     if (!passwordMatch) return;
 
     try {
-      const response = await fetch("http://localhost:5000/auth/register", {
+      const response = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -40,6 +40,7 @@ const RegisterPage = () => {
           password: formData.password,
         }),
       });
+
 
       if (response.ok) {
         navigate("/login");
@@ -109,6 +110,7 @@ const RegisterPage = () => {
               type="password"
               id="password"
               name="password"
+              autoComplete="new-password" 
               value={formData.password}
               onChange={handleChange}
               required
@@ -122,6 +124,7 @@ const RegisterPage = () => {
               type="password"
               id="confirmPassword"
               name="confirmPassword"
+              autoComplete="new-password" 
               value={formData.confirmPassword}
               onChange={handleChange}
               required

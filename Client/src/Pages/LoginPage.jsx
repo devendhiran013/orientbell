@@ -1,23 +1,42 @@
 import React, { useState } from 'react';
 import '../Styles/Login.css';
 import loginImage from '../assests/draw2.webp';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setLogin } from '../redux/state'; // Make sure this path is correct
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setIsButtonDisabled(true);
 
-    if (email === 'admin@gmail.com' && password === 'admin') {
-      localStorage.setItem('admin', 'true');
-      navigate('/admin');
-    } else {
-      setError('Invalid email or password');
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const loggedIn = await response.json();
+
+      if (response.ok) {
+        dispatch(setLogin({ user: loggedIn.user, token: loggedIn.token }));
+        navigate('/');
+      } else {
+        setError(loggedIn.message || 'Login Failed');
+        setIsButtonDisabled(false);
+      }
+    } catch (err) {
+      console.error('Login Failed:', err.message);
+      setError('Login Failed');
+      setIsButtonDisabled(false);
     }
   };
 
@@ -62,7 +81,9 @@ const LoginPage = () => {
               {error && <p className="error-message">{error}</p>}
 
               <div className="text-center text-lg-start mt-4 pt-2">
-                <button type="submit" className="btn btn-primary btn-lg">Login</button>
+                <button type="submit" className="btn btn-primary btn-lg" disabled={isButtonDisabled}>
+                  {isButtonDisabled ? "Logging in..." : "Login"}
+                </button>
                 <p className="small fw-bold mt-2 pt-1 mb-0">
                   Don’t have an account? <Link to="/register" className="link-danger">Register</Link>
                 </p>
